@@ -17,9 +17,10 @@ socketio.on('connection', (socket) => {
             room = new Room(socket.id, name)
             socket.join(name)
             rooms.push(room)
+            socket.emit('renderGame')
         }
         else {
-            socket.emit('message', "A room with this name already exists!") 
+            socket.emit('message', "Server", "A room with this name already exists!") 
         }
     })
 
@@ -36,10 +37,11 @@ socketio.on('connection', (socket) => {
             })
             socket.join(name)
             available[0].joinRoom(socket.id)
-            socketio.to(name).emit('message', "User " + socket.id + " has joined room " + name)
+            socketio.to(name).emit('message', "Server", "User " + socket.id + " has joined room " + name)
+            socket.emit('renderGame')
         }
         else { 
-            socket.emit('message', "This room does not exist!")
+            socket.emit('message', "Server", "This room does not exist!")
         }
     })
 

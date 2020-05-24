@@ -18,6 +18,11 @@
         <input type = 'text' name = 'roomName' placeholder = 'Room Name'>
         <button value = 'submit'>Join Game</button>
     </form>
+
+    <div class = "message-box">
+
+    </div>
+
     <canvas id ="game" width = "600" height = '600'> 
 
     </canvas>
@@ -26,6 +31,18 @@
     canvas { 
         cursor: none;
         border: 2px solid black;
+    }
+    
+    .message-box { 
+        width: 400px;
+        height: 100px;
+        border: 2px solid black;
+        overflow-y: scroll;
+    }
+
+    .message { 
+        color: white;
+        margin: 2px 12px 2px;
     }
 </style>
 </html>

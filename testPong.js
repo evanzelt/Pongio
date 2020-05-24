@@ -2,13 +2,17 @@
 const createGameForm = document.getElementById("createGame")
 const joinGameForm = document.getElementById("joinGame")
 
+const messageBox = document.querySelector(".message-box")
+
 const socket = io('http://192.168.1.180:3000');
 
+//Initialize Canvas Context
 canvas = document.querySelector('#game')
 ctx = canvas.getContext("2d")
 canvasWidth = canvas.width
 canvasHeight = canvas.height
 
+//Constant Game Values
 ballSize = [10, 10]
 paddleSize = [10, 100]
 
@@ -19,11 +23,23 @@ socket.on('updateData', (data) => {
     gameData = data
 })
 
+socket.on('message', (messenger, message) => {
+    let elem = document.createElement('p')
+    elem.innerText = messenger + ": " + message
+    elem.classList.add('message')
+    messageBox.appendChild(elem)
+    messageBox.scrollTop = messageBox.scrollHeight
+})
+
+
+//User Movement
 onmousemove = (e) => { 
     yPos = (e.clientY - canvas.offsetTop)/canvasHeight * 100
     socket.emit('updatePosition', yPos)
 }
 
+
+//Room Handler
 createGameForm.onsubmit = (e) => {
     e.preventDefault()
     socket.emit('createRoom', e.target.children.roomName.value)
@@ -63,9 +79,14 @@ function draw() {
 
 }
 
-setInterval(() => {
-    draw()
-}, 10)
+
+//Game Loop
+let gameLoop = setInterval(() => {}, 10)
+
+socket.on('renderGame', () => { 
+     gameLoop = setInterval(draw, 10)
+})
+
 
 
 

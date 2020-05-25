@@ -1,10 +1,11 @@
 
 const createGameForm = document.getElementById("createGame")
 const joinGameForm = document.getElementById("joinGame")
+const startButton = document.getElementById("start")
 
 const messageBox = document.querySelector(".message-box")
 
-const socket = io('http://192.168.1.180:3000');
+const socket = io('http://192.168.1.20:3000');
 
 //Initialize Canvas Context
 canvas = document.querySelector('#game')
@@ -32,14 +33,16 @@ socket.on('message', (messenger, message) => {
 })
 
 
-//User Movement
+//Client Events
 onmousemove = (e) => { 
-    yPos = (e.clientY - canvas.offsetTop)/canvasHeight * 100
+    yPos = (window.scrollY + e.clientY - canvas.offsetTop)/canvasHeight * 100
     socket.emit('updatePosition', yPos)
 }
 
+startButton.onclick = () => {
+    socket.emit('startGame')
+}
 
-//Room Handler
 createGameForm.onsubmit = (e) => {
     e.preventDefault()
     socket.emit('createRoom', e.target.children.roomName.value)

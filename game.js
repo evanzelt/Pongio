@@ -44,17 +44,12 @@ class Ball extends GameObject {
     startBall() {
         this.pos = [50, 50]
         this.changeSpeed(1, -91)
-        console.log(this.vel[0] + " : " + this.vel[1])
-        console.log(this.angle)
     }
 
     bounce(player) {
         let yDiff = -(this.pos[1] - player.pos[1])
         let newAngle = (((yDiff/(player.size[1]/12)) * 45) + 90) * (-this.angle/Math.abs(this.angle))
         this.changeSpeed((this.speed) + .01, newAngle)
-
-        console.log(this.angle)
-
     }
 
     bounceEdge() { 
@@ -121,7 +116,6 @@ class Game {
                     else { 
                         this.score[1]++
                     }
-                    console.log(this.score)
                     setTimeout(() => { 
                         clearInterval(main)
                         this.start()

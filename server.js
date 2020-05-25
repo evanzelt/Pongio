@@ -14,6 +14,12 @@ socketio.on('connection', (socket) => {
 
     socket.on('createRoom', (name) => {
         if(rooms.filter((r) => {return r.name === name}).length === 0) {
+            rooms.forEach((room) => {
+                if(room.players.includes(socket.id)) { 
+                    room.players.splice(room.players.indexOf(socket.id), 1)
+                    socket.leave(room.name)
+                }
+            })
             room = new Room(socket.id, name)
             socket.join(name)
             rooms.push(room)
@@ -33,6 +39,7 @@ socketio.on('connection', (socket) => {
             rooms.forEach((room) => {
                  if(room.players.includes(socket.id)) { 
                      room.players.splice(room.players.indexOf(socket.id), 1)
+                     socket.leave(room.name)
                  }
             })
             socket.join(name)
@@ -42,6 +49,22 @@ socketio.on('connection', (socket) => {
         }
         else { 
             socket.emit('message', "Server", "This room does not exist!")
+        }
+    })
+
+    socket.on('startGame', () => {
+        const room = rooms.filter((r) => {
+            return r.players.includes(socket.id)
+        })[0]
+        if(room === undefined) {
+            socket.emit('message', 'Server', 'You are not currently in a room!')
+        }
+        else if(room.players.indexOf(socket.id) != 0) {
+            socket.emit('message', 'Server', 'You are not the host of this game!')
+        }
+        else {
+            socket.emit('message', 'Server', 'The game has started!')
+            room.game.start()
         }
     })
 
